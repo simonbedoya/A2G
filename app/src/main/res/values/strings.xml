@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">A2G</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="map_not_ready">Map is not ready yet</string>
+    <string name="permission_rationale_location">Access to the location service is required to demonstrate the \'my location\' feature, which shows your current location on the map.</string>
+    <string name="location_permission_denied">This sample requires location permission to enable the \'my location\' layer. Please try again and grant access to use the location.\nIf the permission has been permanently denied, it can be enabled from the System Settings &gt; Apps &gt; \'Google Maps API Demos\'.</string>
+    <string name="permission_required_toast">Location permission is required for this demo.</string>
+
+    <!-- API -->
+    <string name="URL">http://servidor.monitoreosatelitalgps.com/</string>
+
+    <!-- TABS -->
+    <string name="TAB_DETAIL_NAME">Detalles</string>
+    <string name="TAB_MAP_NAME">Mapa</string>
+    <string name="TAB_PROFILE_NAME">Perfil</string>
+    <string name="placa">Placa</string>
+    <string name="detalles">Detalles</string>
+    <string name="exp_plate">dfg_789</string>
+    <string name="browser_appauth_default_label">AppAuth heuristic selection</string>
+    <string name="custom_tab_label">"%1$s (custom tab)"</string>
+    <string name="browser_icon_contentDescription">Browser app icon</string>
+</resources>

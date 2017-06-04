@@ -1,0 +1,632 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.monitoreosatelitalgps.a2g.Fragment.DetailFragment">
+          <android.support.v7.widget.RecyclerView
+            android:id="@+id/listVehicle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"
+            android:clickable="true"
+            android:focusable="true"
+            android:scrollbars="vertical"
+            android:background="@color/colorSecondaryText"
+            android:layout_below="@+id/linearSearchDetail"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView"
+        android:visibility="invisible">
+
+        <LinearLayout
+            android:id="@+id/panelDetailsVehicle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="20sp"
+            android:visibility="invisible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Placa:"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/txtPlate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text=""
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10sp"
+                app:cardUseCompatPadding="true"
+                app:contentPadding="0dp"
+                app:cardCornerRadius="6sp"
+                app:cardBackgroundColor="@color/background_list">
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <ImageButton
+                            android:id="@+id/imgBtnDatail"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_margin="5dp"
+                            android:layout_gravity="end"
+                            android:padding="5dp"
+                            android:src="@drawable/ic_autorenew"
+                            android:tint="@color/colorPrimaryText"
+                            android:clickable="false"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="10sp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginBottom="10sp"
+                                android:text="Datos basicos:"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:padding="10sp">
+
+                                <ImageView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:src="@drawable/ic_place"
+                                    android:tint="@color/colorAccent" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="4"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:text="Latitud:"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/txtLatitude"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:text="" />
+                                </LinearLayout>
+
+                                <ImageView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:src="@drawable/ic_place"
+                                    android:tint="@color/colorAccent" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="4"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:text="Longitud:"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/txtLongitude"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:text="" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:padding="10sp">
+
+                                <ImageView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:src="@drawable/ic_near_me"
+                                    android:tint="@color/colorAccent" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="4"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:text="Velocidad:"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/txtVel"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:text="" />
+                                </LinearLayout>
+
+                                <ImageView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:src="@drawable/ic_person_pin_black_24dp"
+                                    android:tint="@color/colorAccent" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="4"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:text="Posición:"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/txtPosition"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:text="" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:padding="10sp">
+
+                                <ImageView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:src="@drawable/ic_gps_fixed"
+                                    android:tint="@color/colorAccent" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="4"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:text="Estado GPS:"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/txtStateGPS"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:text="" />
+                                </LinearLayout>
+
+                                <ImageView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:src="@drawable/ic_directions_car"
+                                    android:tint="@color/colorAccent" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="4"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:text="Estado vehiculo:"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/tatStateVehicle"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:text="" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+                        <RelativeLayout
+                            android:id="@+id/loadBasicData"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:background="@color/colorBackgroundLoad">
+                            <ProgressBar
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"/>
+                        </RelativeLayout>
+                    </FrameLayout>
+
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardUseCompatPadding="true"
+                app:contentPadding="0dp"
+                app:cardCornerRadius="6sp"
+                app:cardBackgroundColor="@color/background_list">
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/background_list"
+                    android:orientation="vertical"
+                    android:padding="10sp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="10sp"
+                        android:text="Reporte diario:"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="10sp">
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_directions_run"
+                            android:tint="@color/colorAccent" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Km recorridos:"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/txtKMRec"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_terrain"
+                            android:tint="@color/colorAccent" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Vel promedio:"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/txtVelProm"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="10sp">
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_map"
+                            android:tint="@color/colorAccent" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Km ultimo recorrido:"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/txtKMURec"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_network_check"
+                            android:tint="@color/colorAccent" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Odometro:"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/txtOdom"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="10sp">
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_timer"
+                            android:tint="@color/colorAccent" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Primer encendido:"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/txtPRec"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_notifications_active"
+                            android:tint="@color/colorAccent" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Excesos de velocidad:"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/txtEVel"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="10sp">
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_show_chart"
+                            android:tint="@color/colorAccent" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Maxima velocidad:"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/txtMaxVel"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_notifications_paused"
+                            android:tint="@color/colorAccent" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Ultimo apagado:"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/txtUApag"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="10sp">
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_toys"
+                            android:tint="@color/colorAccent" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Motor encendido:"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/txtMEnc"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"
+                            android:orientation="vertical" />
+                    </LinearLayout>
+                </LinearLayout>
+                    <ImageButton
+                        android:id="@+id/imgBtnDailyReport"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="end"
+                        android:src="@drawable/ic_autorenew"
+                        android:tint="@color/colorPrimaryText"
+                        android:clickable="false"/>
+                    <RelativeLayout
+                        android:id="@+id/loadDailyReport"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:background="@color/colorBackgroundLoad">
+                        <ProgressBar
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"/>
+                    </RelativeLayout>
+
+                </FrameLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
+</android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,121 @@
+
+
+buildscript {
+  repositories {
+    maven { url 'https://maven.fabric.io/public' }
+    jcenter()
+  }
+
+  dependencies {
+    classpath 'io.fabric.tools:gradle:1.+'
+    classpath 'me.tatarka:gradle-retrolambda:3.2.5'
+  }
+}
+
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.android.application'
+
+
+android {
+  compileSdkVersion 24
+  buildToolsVersion '25.0.2'
+  defaultConfig {
+
+    applicationId "com.monitoreosatelitalgps.a2g"
+    minSdkVersion 18
+    targetSdkVersion 24
+    versionCode 1
+    versionName "1.0"
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    multiDexEnabled true
+    vectorDrawables.useSupportLibrary = true
+    manifestPlaceholders = [onesignal_app_id               : "c2663d5b-fbb0-4855-a6a6-06e6553a0291",
+                            // Project number pulled from dashboard, local value is ignored.
+                            onesignal_google_project_number: "REMOTE"]
+
+  }
+
+    signingConfigs {
+        debugAndRelease {
+            storeFile file("${rootDir}/appauth.keystore")
+            storePassword "appauth"
+            keyAlias "appauth"
+            keyPassword "appauth"
+        }
+    }
+  dexOptions {
+    javaMaxHeapSize "4g"
+  }
+  productFlavors {
+    dev {
+      minSdkVersion 18
+    }
+    prod {
+      // The actual minSdkVersion for the application.
+      minSdkVersion 17
+    }
+  }
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+  lintOptions {
+    checkReleaseBuilds false
+    abortOnError false
+  }
+  aaptOptions {
+    cruncherEnabled = false
+  }
+
+  compileOptions {
+    targetCompatibility 1.8
+    sourceCompatibility 1.8
+  }
+
+  lintOptions {
+    checkReleaseBuilds false
+    abortOnError false
+  }
+  aaptOptions {
+    cruncherEnabled = false
+  }
+  dataBinding {
+    enabled true
+  }
+}
+
+retrolambda {
+  jvmArgs '-noverify'
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    //compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile "com.android.support:design:$rootProject.ext.support"
+    compile "com.android.support:appcompat-v7:$rootProject.ext.support"
+    compile "com.android.support:cardview-v7:$rootProject.ext.support"
+    compile "com.android.support:recyclerview-v7:$rootProject.ext.support"
+    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.google.android.gms:play-services-maps:10.2.4'
+    compile 'com.google.android.gms:play-services-location:10.2.4'
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.squareup.retrofit2:retrofit:2.0.2'
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'io.reactivex:rxjava:1.1.6'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.2'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0'
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.onesignal:OneSignal:[3.5.3,4.0.0)'
+    compile 'com.google.android.gms:play-services-gcm:10.2.4'
+    compile 'org.greenrobot:eventbus:3.0.0'
+    retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:$rootProject.ext.retrolambda"
+}
+
+apply plugin: 'com.google.gms.google-services'
+
+

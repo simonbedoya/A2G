@@ -1,0 +1,10 @@
+{
+  "client_id": "mobile_app",
+  "redirect_uri": "net.openid.appauthdemo:/oauth2redirect",
+  "authorization_scope": "openid",
+  "discovery_uri": "http://servidor.monitoreosatelitalgps.com/auth/realms/A2G_Realm/.well-known/openid-configuration",
+  "authorization_endpoint_uri": "http://servidor.monitoreosatelitalgps.com/auth/realms/A2G_Realm/protocol/openid-connect/auth",
+  "token_endpoint_uri": "http://servidor.monitoreosatelitalgps.com/auth/realms/A2G_Realm/protocol/openid-connect/token",
+  "registration_endpoint_uri": "http://servidor.monitoreosatelitalgps.com/auth/realms/A2G_Realm/clients-registrations/openid-connect",
+  "https_required": false
+}

@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "834856842794",
+    "project_id": "firebase-a2gapp"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:834856842794:android:5a0f854bab4a16c8",
+        "android_client_info": {
+          "package_name": "com.monitoreosatelitalgps.a2g"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASsrkkNFHOZn0FKXDa-EnkTCO9TqyBlBA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
