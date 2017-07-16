@@ -1,5 +1,8 @@
 package com.monitoreosatelitalgps.a2g.Activity;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements MapInterface,
   private List<VehiculoMap> vehiculoMapList;
   private DetailFragment detailFragment;
   private MapFragment mapFragment;
+  private ProfileFragment profileFragment;
   private boolean stateDetails = false;
   private Menu menu;
   private SearchView searchView;
@@ -49,19 +53,22 @@ public class MainActivity extends AppCompatActivity implements MapInterface,
     ButterKnife.bind(this);
     setSupportActionBar(toolbar);
 
+
     ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
     detailFragment = new DetailFragment();
     mapFragment = new MapFragment();
+    profileFragment = new ProfileFragment();
     mapFragment.setMapInterface(this);
     detailFragment.setMapInterface(this);
     viewPagerAdapter.addFragment(detailFragment, this.getString(R.string.TAB_DETAIL_NAME));
     viewPagerAdapter.addFragment(mapFragment, this.getString(R.string.TAB_MAP_NAME));
-    viewPagerAdapter.addFragment(new ProfileFragment(), this.getString(R.string.TAB_PROFILE_NAME));
+    viewPagerAdapter.addFragment(profileFragment, this.getString(R.string.TAB_PROFILE_NAME));
     viewPager.setAdapter(viewPagerAdapter);
     tabLayout.setupWithViewPager(viewPager);
     tabLayout.getTabAt(TAB_MAP).select();
     tabLayout.addOnTabSelectedListener(this);
     OneSignal.idsAvailable((userId, registrationId) -> Log.e(TAG, userId));
+
   }
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -74,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements MapInterface,
     searchView.setOnSearchClickListener(this);
     searchView.setOnCloseListener(this);
     searchView.setOnQueryTextListener(this);
+    this.toolbar.getMenu().getItem(1).setVisible(false);
 
     return true;
   }
@@ -88,11 +96,25 @@ public class MainActivity extends AppCompatActivity implements MapInterface,
           }
         break;
       case R.id.log_out:
+          logout();
         break;
+        case R.id.edit:
+            profileFragment.activeFields();
+            break;
     }
     return false;
   }
 
+
+  private void logout(){
+      SharedPreferences prefs = getSharedPreferences("dataUser", Context.MODE_PRIVATE);
+      SharedPreferences.Editor editor = prefs.edit();
+      editor.clear();
+      editor.apply();
+      Intent intent = new Intent(this,RootActivity.class);
+      startActivity(intent);
+      finish();
+  }
 
   @Override
   public void setTab(int tab) {
@@ -140,15 +162,20 @@ public class MainActivity extends AppCompatActivity implements MapInterface,
             detailFragment.reloadList();
             detailFragment.changeViews(stateDetails);
             this.toolbar.getMenu().getItem(0).setVisible(true);
+            this.toolbar.getMenu().getItem(1).setVisible(false);
         }else if(tab.getPosition() == TAB_MAP){
             closeSearchView();
             this.stateDetails = false;
             this.toolbar.getMenu().getItem(0).setVisible(true);
+            this.toolbar.getMenu().getItem(1).setVisible(false);
             mapFragment.reloadMap();
         }else if(tab.getPosition() == TAB_PROFILE){
             closeSearchView();
             this.toolbar.getMenu().getItem(0).setVisible(false);
+            this.toolbar.getMenu().getItem(1).setVisible(true);
             this.stateDetails = false;
+            profileFragment.loadInfoPerson();
+            profileFragment.disable_fields();
         }
     }
 

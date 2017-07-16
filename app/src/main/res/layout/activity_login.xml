@@ -11,47 +11,76 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical">
-            <Spinner
-                android:id="@+id/browser_selector"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="invisible"/>
+            android:layout_gravity="center_vertical"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+            <requestFocus/>
             <ImageView
                 android:id="@+id/img"
                 android:src="@drawable/logo"
-                android:layout_width="300dp"
-                android:layout_height="100dp"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="20dp"/>
-            <EditText
-                android:id="@+id/edtEmail"
+            <LinearLayout
+                android:id="@+id/linearInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp"
-                android:hint="Correo electrónico"
-                android:isScrollContainer="true"
-                android:layout_below="@+id/img"/>
-            <EditText
-                android:id="@+id/edtPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp"
-                android:layout_marginTop="40dp"
-                android:layout_below="@+id/edtEmail"
-                android:hint="Contreseña"
-                android:isScrollContainer="true"/>
-            <Button
-                android:id="@+id/login"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/edtPassword"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="40dp"
-                android:text="Ingresar"
-                android:isScrollContainer="true"/>
+                android:orientation="vertical"
+                android:layout_below="@+id/img">
+                <EditText
+                    android:id="@+id/edtEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"
+                    android:hint="Usuario"
+                    android:isScrollContainer="true"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:inputType="textVisiblePassword"
+                    android:nextFocusDown="@+id/edtPassword"
+                    android:background="@drawable/background_edt_login"/>
+                <EditText
+                    android:id="@+id/edtPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"
+                    android:layout_marginTop="40dp"
+                    android:hint="Contreseña"
+                    android:isScrollContainer="true"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:inputType="textPassword"
+                    android:background="@drawable/background_edt_login"/>
+                <android.support.v7.widget.AppCompatCheckBox
+                    android:id="@+id/remember"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Recordarme"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:buttonTint="@color/colorPrimaryDark"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"/>
+                <Button
+                    android:id="@+id/login"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:text="   Ingresar   "
+                    android:isScrollContainer="true"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:background="@drawable/button_login"/>
+            </LinearLayout>
+
         </RelativeLayout>
     </ScrollView>
 

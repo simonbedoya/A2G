@@ -2,6 +2,9 @@ package com.monitoreosatelitalgps.a2g.Fragment;
 
 
 import android.Manifest;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -31,6 +34,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.monitoreosatelitalgps.a2g.Api.RetrofitSingleton;
+import com.monitoreosatelitalgps.a2g.Fragment.Interface.ErrorInterface;
 import com.monitoreosatelitalgps.a2g.Fragment.Interface.MapInterface;
 import com.monitoreosatelitalgps.a2g.Models.Query;
 import com.monitoreosatelitalgps.a2g.Models.VehiculoMap;
@@ -38,6 +42,7 @@ import com.monitoreosatelitalgps.a2g.R;
 import com.monitoreosatelitalgps.a2g.Utils.CustomInfoWindow;
 import com.monitoreosatelitalgps.a2g.Utils.Error;
 import com.monitoreosatelitalgps.a2g.Utils.PermissionUtils;
+import com.monitoreosatelitalgps.a2g.Utils.Token;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +62,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                                                      GoogleApiClient.ConnectionCallbacks,
                                                      GoogleApiClient.OnConnectionFailedListener,
                                                      GoogleMap.OnInfoWindowClickListener,
-                                                     GoogleMap.OnMarkerClickListener{
+                                                     GoogleMap.OnMarkerClickListener, GoogleMap.OnMyLocationButtonClickListener,ErrorInterface{
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
@@ -67,9 +72,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private MapInterface mapInterface;
     private Timer timer;
     private List<Marker> markerList;
+    private ProgressDialog loadCars;
 
     public MapFragment() {
         // Required empty public constructor
+
+
     }
 
     public void setMapInterface(MapInterface mapInterface){
@@ -82,6 +90,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         // Inflate the layout for this fragment
 
         View v = inflater.inflate(R.layout.fragment_map, container, false);
+        configProgressLoad();
+        loadCars.show();
 
         mMapView = (MapView) v.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
@@ -105,6 +115,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         return v;
     }
 
+    private void configProgressLoad(){
+        loadCars = new ProgressDialog(getContext());
+        loadCars.setTitle("Vehiculos");
+        loadCars.setMessage("Cargando...");
+        loadCars.setCancelable(false);
+    }
+
 
     @Override
     public void onMapReady(GoogleMap mMap) {
@@ -119,6 +136,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         googleMap.setInfoWindowAdapter(customInfoWindow);
         googleMap.setOnInfoWindowClickListener(this);
         googleMap.setOnMarkerClickListener(this);
+        googleMap.setOnMyLocationButtonClickListener(this);
     }
 
     private boolean checkReady() {
@@ -144,16 +162,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void loadMarkerMap(){
+
+        Error.setErrorInterface(this);
+        SharedPreferences prefs = getActivity().getSharedPreferences("dataUser",Context.MODE_PRIVATE);
+        String token = prefs.getString("TOKEN","");
+        String username = prefs.getString("USERNAME","");
+        if(token.equals("") && username.equals("")){
+            return;
+        }
         Query query = new Query();
-        query.setUsername("gaalvarez");
-        Observable<List<VehiculoMap>> vehiculosMap = RetrofitSingleton.getApi(this.getActivity()).getVehiculoMap(query);
+        query.setUsername(username);
+        Observable<List<VehiculoMap>> vehiculosMap = RetrofitSingleton.getApi(this.getActivity()).getVehiculoMap("Bearer "+token,query);
+        //Observable<List<VehiculoMap>> vehiculosMap = RetrofitSingleton.getApi(this.getActivity()).getVehiculoMap(query);
 
         vehiculosMap.subscribeOn(Schedulers.io())
                 .doOnSubscribe(()->{})
-                .doOnCompleted(()->{})
+                .doOnCompleted(()->loadCars.hide())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::setMakerMap,
-                        throwable -> Error.errControl(throwable,TAG_MAP,getView()), () -> Log.i(TAG_MAP, "succes"));
+                        throwable -> Error.errControlMakers(throwable,TAG_MAP,getView(),loadCars), () -> Log.i(TAG_MAP, "succes"));
     }
 
     private void setMakerMap(List<VehiculoMap> vehiculoMaps){
@@ -330,4 +357,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
 
+    @Override
+    public boolean onMyLocationButtonClick() {
+        Log.e("token","click en my ubicacion");
+        loadMarkerMap();
+        return false;
+    }
+
+    @Override
+    public void getTokenMap() {
+        Log.e("getToken","getToken");
+        Token.getToken(getActivity(),getView(),loadCars);
+    }
+
+    @Override
+    public void loadMarkersOnMap() {
+        loadMarkerMap();
+    }
 }

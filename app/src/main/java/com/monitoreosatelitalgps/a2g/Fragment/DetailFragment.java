@@ -1,6 +1,8 @@
 package com.monitoreosatelitalgps.a2g.Fragment;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -180,7 +182,14 @@ public class DetailFragment extends Fragment implements RecyclerAdapter.OnItemCl
     }
 
     private void loadDataDetail(QueryVehicleDetail query){
-        Observable<DetailsVehicle> detailsVehicle = RetrofitSingleton.getApi(this.getActivity()).getDatailsVehicle(query);
+        SharedPreferences prefs = getActivity().getSharedPreferences("dataUser", Context.MODE_PRIVATE);
+        String token = prefs.getString("TOKEN","");
+        String username = prefs.getString("USERNAME","");
+        if(token.equals("") && username.equals("")){
+            return;
+        }
+        Observable<DetailsVehicle> detailsVehicle = RetrofitSingleton.getApi(this.getActivity()).getDatailsVehicle("Bearer "+token,query);
+        //Observable<DetailsVehicle> detailsVehicle = RetrofitSingleton.getApi(this.getActivity()).getDatailsVehicle(query);
 
         detailsVehicle.subscribeOn(Schedulers.io())
                 .doOnSubscribe(()-> loadPanel(loadBasicData,true))
@@ -191,7 +200,14 @@ public class DetailFragment extends Fragment implements RecyclerAdapter.OnItemCl
     }
 
     private void loadDataDaily(QueryVehicleDetail query){
-        Observable<DailyReportVehicle> dailyReportVehicle = RetrofitSingleton.getApi(this.getActivity()).getDailyReportVehicle(query);
+        SharedPreferences prefs = getActivity().getSharedPreferences("dataUser",Context.MODE_PRIVATE);
+        String token = prefs.getString("TOKEN","");
+        String username = prefs.getString("USERNAME","");
+        if(token.equals("") && username.equals("")){
+            return;
+        }
+        Observable<DailyReportVehicle> dailyReportVehicle = RetrofitSingleton.getApi(this.getActivity()).getDailyReportVehicle("Bearer "+token,query);
+        //Observable<DailyReportVehicle> dailyReportVehicle = RetrofitSingleton.getApi(this.getActivity()).getDailyReportVehicle(query);
 
         dailyReportVehicle.subscribeOn(Schedulers.io())
                 .doOnSubscribe(()->loadPanel(loadDailyReport,true))

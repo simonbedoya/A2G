@@ -19,4 +19,8 @@ public class Constants {
         public static final String TAG_MAIN = MainActivity.class.getSimpleName();
         public static final String TAG_MAP = MapFragment.class.getSimpleName();
     }
+
+    public static class url{
+        public static final String URL_GET_INFO = "http://servidor.monitoreosatelitalgps.com/tracking-position-v2/api/account/";
+    }
 }
