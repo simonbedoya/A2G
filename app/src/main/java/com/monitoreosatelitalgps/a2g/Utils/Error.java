@@ -54,7 +54,9 @@ public class Error {
     }
 
     public static void errControlMakers(@NonNull Throwable throwable, String tag, View view, ProgressDialog progressDialog) {
-        progressDialog.hide();
+        if(progressDialog != null) {
+            progressDialog.hide();
+        }
 
         Log.e(tag,"ErrorControlMakers",throwable);
         if (throwable instanceof HttpException) {
@@ -62,8 +64,8 @@ public class Error {
             if(((HttpException) throwable).code() == 500){
                 Snackbar.make(view,"Error intente nuevamente",Snackbar.LENGTH_SHORT).show();
             }else if(((HttpException) throwable).code() == 401){
-                errorInterface.getTokenMap();
-                errorInterface.loadMarkersOnMap();
+                //errorInterface.getTokenMap();
+                //errorInterface.loadMarkersOnMap();
 
             }
 
@@ -75,7 +77,9 @@ public class Error {
     }
 
     public static void errControlInfoPerson(@NonNull Throwable throwable, String tag, View view, ProgressDialog progressDialog) {
-        progressDialog.hide();
+        if(progressDialog != null) {
+            progressDialog.hide();
+        }
 
         Log.e(tag,"ErrorControlMakers",throwable);
         if (throwable instanceof HttpException) {
@@ -119,7 +123,9 @@ public class Error {
     }
 
     public static void errControlLogin(@NonNull Throwable throwable, String tag, View view, ProgressDialog progressDialog) {
-        progressDialog.hide();
+        if(progressDialog != null) {
+            progressDialog.hide();
+        }
         Snackbar.make(view,"Error intente nuevamente",Snackbar.LENGTH_SHORT).show();
         Log.e(tag,throwable.getMessage(),throwable);
         if (throwable instanceof HttpException) {
@@ -134,4 +140,7 @@ public class Error {
 
         }
     }
+
+
+
 }

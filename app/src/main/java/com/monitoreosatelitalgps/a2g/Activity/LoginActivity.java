@@ -31,6 +31,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.io.UnsupportedEncodingException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import butterknife.Bind;
@@ -105,6 +107,7 @@ public class LoginActivity extends AppCompatActivity implements EditText.OnEdito
 
 
     private void getToken() {
+        progressDialog.show();
         HashMap<String, String> param = new HashMap<>();
         s_password = password.getText().toString().trim();
         param.put("username", email.getText().toString().trim());
@@ -115,7 +118,7 @@ public class LoginActivity extends AppCompatActivity implements EditText.OnEdito
         Observable<Authenticate> auth = RetrofitSingleton.getApi(this).getAuth(param);
 
         auth.subscribeOn(Schedulers.io())
-            .doOnSubscribe(() -> progressDialog.show())
+            .doOnSubscribe(() -> {})
             .doOnCompleted(() -> {})
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(this::responseLogin,
@@ -134,10 +137,7 @@ public class LoginActivity extends AppCompatActivity implements EditText.OnEdito
         Gson gson = new Gson();
         DataToken dataToken = gson.fromJson(datab, DataToken.class);
         saveData(dataToken,authenticate);
-        Intent intent = new Intent(this,MainActivity.class);
-        progressDialog.hide();
-        startActivity(intent);
-        finish();
+
     }
 
     private void StartAnimations() {
@@ -167,7 +167,15 @@ public class LoginActivity extends AppCompatActivity implements EditText.OnEdito
         editor.putString("EMAIL", dataToken.getEmail());
         editor.putString("LAST_NAME",dataToken.getFamily_name());
         editor.putBoolean("REMEMBER",rememberBol);
+        editor.putInt("EXPIRE_TOKEN",authenticate.getExpires_in());
+        editor.putLong("DATE_TOKEN", Calendar.getInstance().getTimeInMillis());
         editor.apply();
+
+        progressDialog.hide();
+        Intent intent = new Intent(this,MainActivity.class);
+
+        startActivity(intent);
+        finish();
     }
 
 

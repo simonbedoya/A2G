@@ -35,6 +35,8 @@ import com.monitoreosatelitalgps.a2g.Models.QueryVehicleDetail;
 import com.monitoreosatelitalgps.a2g.Models.VehiculoMap;
 import com.monitoreosatelitalgps.a2g.R;
 import com.monitoreosatelitalgps.a2g.Utils.Error;
+import com.monitoreosatelitalgps.a2g.Utils.Interface.ValidateTokenInterface;
+import com.monitoreosatelitalgps.a2g.Utils.ValidateToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,11 +50,12 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import static com.monitoreosatelitalgps.a2g.Utils.Constants.tags.TAG_MAP;
+import static com.monitoreosatelitalgps.a2g.Utils.Utils.logout;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DetailFragment extends Fragment implements RecyclerAdapter.OnItemClickListener {
+public class DetailFragment extends Fragment implements RecyclerAdapter.OnItemClickListener, ValidateTokenInterface {
 
     @Bind(R.id.listVehicle) RecyclerView listVehicle;
     @Bind(R.id.panelDetailsVehicle) LinearLayout panelDetails;
@@ -83,6 +86,8 @@ public class DetailFragment extends Fragment implements RecyclerAdapter.OnItemCl
     private RecyclerAdapter recyclerAdapter;
     private List<VehiculoMap> listVehicles = new ArrayList<>();
     private String placa;
+    private QueryVehicleDetail queryVehicleDetail;
+    private ValidateToken validateToken;
 
     public DetailFragment() {}
 
@@ -96,7 +101,8 @@ public class DetailFragment extends Fragment implements RecyclerAdapter.OnItemCl
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_detail, container, false);
         ButterKnife.bind(this, view);
-
+        validateToken = new ValidateToken();
+        validateToken.setValidateTokenInterface(this);
         recyclerAdapter = new RecyclerAdapter(getContext(),listVehicles);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getActivity());
@@ -173,48 +179,20 @@ public class DetailFragment extends Fragment implements RecyclerAdapter.OnItemCl
     }
 
     public void loadDataVehicle(){
-        QueryVehicleDetail query = new QueryVehicleDetail();
-        query.setPlate(this.placa);
+        queryVehicleDetail = new QueryVehicleDetail();
+        queryVehicleDetail.setPlate(this.placa);
         clearFileds();
-        loadDataDetail(query);
-        loadDataDaily(query);
+        loadDataDetail();
+        loadDataDaily();
 
     }
 
-    private void loadDataDetail(QueryVehicleDetail query){
-        SharedPreferences prefs = getActivity().getSharedPreferences("dataUser", Context.MODE_PRIVATE);
-        String token = prefs.getString("TOKEN","");
-        String username = prefs.getString("USERNAME","");
-        if(token.equals("") && username.equals("")){
-            return;
-        }
-        Observable<DetailsVehicle> detailsVehicle = RetrofitSingleton.getApi(this.getActivity()).getDatailsVehicle("Bearer "+token,query);
-        //Observable<DetailsVehicle> detailsVehicle = RetrofitSingleton.getApi(this.getActivity()).getDatailsVehicle(query);
-
-        detailsVehicle.subscribeOn(Schedulers.io())
-                .doOnSubscribe(()-> loadPanel(loadBasicData,true))
-                .doOnCompleted(()-> {})
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setDetailsVehicle,
-                        throwable -> Error.errControl2(throwable,TAG_MAP,getView(),loadBasicData,imgBtnDatail,"detail"), () -> loadPanel(loadBasicData,false));
+    private void loadDataDetail(){
+        validateToken.validateExpireToken(getActivity(),0);
     }
 
-    private void loadDataDaily(QueryVehicleDetail query){
-        SharedPreferences prefs = getActivity().getSharedPreferences("dataUser",Context.MODE_PRIVATE);
-        String token = prefs.getString("TOKEN","");
-        String username = prefs.getString("USERNAME","");
-        if(token.equals("") && username.equals("")){
-            return;
-        }
-        Observable<DailyReportVehicle> dailyReportVehicle = RetrofitSingleton.getApi(this.getActivity()).getDailyReportVehicle("Bearer "+token,query);
-        //Observable<DailyReportVehicle> dailyReportVehicle = RetrofitSingleton.getApi(this.getActivity()).getDailyReportVehicle(query);
-
-        dailyReportVehicle.subscribeOn(Schedulers.io())
-                .doOnSubscribe(()->loadPanel(loadDailyReport,true))
-                .doOnCompleted(()->{})
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setDailyReportVehicle,
-                        throwable -> Error.errControl2(throwable,TAG_MAP,getView(),loadDailyReport,imgBtnDailyReport,"daily"), () -> loadPanel(loadDailyReport,false));
+    private void loadDataDaily(){
+        validateToken.validateExpireToken(getActivity(),1);
     }
 
     private void loadPanel(RelativeLayout relativeLayout, Boolean active){
@@ -295,7 +273,7 @@ public class DetailFragment extends Fragment implements RecyclerAdapter.OnItemCl
         //Toast.makeText(getContext(),"Se presiono reload 1",Toast.LENGTH_SHORT).show();
         QueryVehicleDetail query = new QueryVehicleDetail();
         query.setPlate(this.placa);
-        loadDataDetail(query);
+        loadDataDetail();
     }
 
     @OnClick(R.id.imgBtnDailyReport)
@@ -303,6 +281,39 @@ public class DetailFragment extends Fragment implements RecyclerAdapter.OnItemCl
         //Toast.makeText(getContext(),"Se presiono reload 2",Toast.LENGTH_SHORT).show();
         QueryVehicleDetail query = new QueryVehicleDetail();
         query.setPlate(this.placa);
-        loadDataDaily(query);
+        loadDataDaily();
+    }
+
+    @Override
+    public void errorWithDataUser() {
+        Snackbar.make(getView(), "Error obteniendo datos de sesión",Snackbar.LENGTH_INDEFINITE).setAction("Recargar",v -> logout(getActivity()));
+    }
+
+    @Override
+    public void successValidateToken(int cod, String username, String token) {
+        switch (cod){
+            case 0:
+                Observable<DetailsVehicle> detailsVehicle = RetrofitSingleton.getApi(this.getActivity()).getDatailsVehicle("Bearer "+token,queryVehicleDetail);
+                //Observable<DetailsVehicle> detailsVehicle = RetrofitSingleton.getApi(this.getActivity()).getDatailsVehicle(query);
+
+                detailsVehicle.subscribeOn(Schedulers.io())
+                    .doOnSubscribe(()-> loadPanel(loadBasicData,true))
+                    .doOnCompleted(()-> {})
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this::setDetailsVehicle,
+                        throwable -> Error.errControl2(throwable,TAG_MAP,getView(),loadBasicData,imgBtnDatail,"detail"), () -> loadPanel(loadBasicData,false));
+                break;
+            case 1:
+                Observable<DailyReportVehicle> dailyReportVehicle = RetrofitSingleton.getApi(this.getActivity()).getDailyReportVehicle("Bearer "+token,queryVehicleDetail);
+                //Observable<DailyReportVehicle> dailyReportVehicle = RetrofitSingleton.getApi(this.getActivity()).getDailyReportVehicle(query);
+
+                dailyReportVehicle.subscribeOn(Schedulers.io())
+                    .doOnSubscribe(()->loadPanel(loadDailyReport,true))
+                    .doOnCompleted(()->{})
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this::setDailyReportVehicle,
+                        throwable -> Error.errControl2(throwable,TAG_MAP,getView(),loadDailyReport,imgBtnDailyReport,"daily"), () -> loadPanel(loadDailyReport,false));
+                break;
+        }
     }
 }

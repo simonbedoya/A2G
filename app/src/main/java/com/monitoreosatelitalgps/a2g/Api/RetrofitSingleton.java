@@ -24,8 +24,8 @@ public class RetrofitSingleton {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         httpClient.addInterceptor(logging);
-        httpClient.connectTimeout(10, TimeUnit.SECONDS);
-        httpClient.readTimeout(30, TimeUnit.SECONDS);
+        httpClient.connectTimeout(20, TimeUnit.SECONDS);
+        httpClient.readTimeout(50, TimeUnit.SECONDS);
         return httpClient.build();
     }
 

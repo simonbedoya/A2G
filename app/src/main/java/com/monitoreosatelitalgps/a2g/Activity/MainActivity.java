@@ -3,6 +3,7 @@ package com.monitoreosatelitalgps.a2g.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.icu.text.IDNA;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -17,23 +18,38 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.monitoreosatelitalgps.a2g.Adapter.ViewPagerAdapter;
+import com.monitoreosatelitalgps.a2g.Api.RetrofitSingleton;
 import com.monitoreosatelitalgps.a2g.Fragment.DetailFragment;
 import com.monitoreosatelitalgps.a2g.Fragment.MapFragment;
 import com.monitoreosatelitalgps.a2g.Fragment.Interface.MapInterface;
 import com.monitoreosatelitalgps.a2g.Fragment.ProfileFragment;
+import com.monitoreosatelitalgps.a2g.Models.InfoPerson;
 import com.monitoreosatelitalgps.a2g.Models.VehiculoMap;
 import com.monitoreosatelitalgps.a2g.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
+import com.monitoreosatelitalgps.a2g.Utils.Error;
+import com.monitoreosatelitalgps.a2g.Utils.Interface.ValidateTokenInterface;
+import com.monitoreosatelitalgps.a2g.Utils.ValidateToken;
 import com.onesignal.OneSignal;
 import java.util.List;
+
+import static com.monitoreosatelitalgps.a2g.Utils.Constants.cod_token.COD_LOAD_PERSON;
+import static com.monitoreosatelitalgps.a2g.Utils.Constants.cod_token.COD_SAVE_PERSON;
 import static com.monitoreosatelitalgps.a2g.Utils.Constants.tabs.*;
+import static com.monitoreosatelitalgps.a2g.Utils.Constants.tags.TAG_MAP;
+import static com.monitoreosatelitalgps.a2g.Utils.Constants.url.URL_GET_INFO;
 
 public class MainActivity extends AppCompatActivity implements MapInterface,
                                                                 TabLayout.OnTabSelectedListener,
                                                                 SearchView.OnClickListener,
                                                                 SearchView.OnCloseListener,
-                                                                SearchView.OnQueryTextListener{
+                                                                SearchView.OnQueryTextListener,
+    ValidateTokenInterface{
 
   @Bind(R.id.pagerPcpal) ViewPager viewPager;
   @Bind(R.id.tabLayout) TabLayout tabLayout;
@@ -46,6 +62,9 @@ public class MainActivity extends AppCompatActivity implements MapInterface,
   private boolean stateDetails = false;
   private Menu menu;
   private SearchView searchView;
+  private String userID;
+  private ValidateToken validateToken;
+    private InfoPerson infoP;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -67,7 +86,11 @@ public class MainActivity extends AppCompatActivity implements MapInterface,
     tabLayout.setupWithViewPager(viewPager);
     tabLayout.getTabAt(TAB_MAP).select();
     tabLayout.addOnTabSelectedListener(this);
-    OneSignal.idsAvailable((userId, registrationId) -> Log.e(TAG, userId));
+    OneSignal.idsAvailable((userId, registrationId) -> this.userID = userId);
+      validateToken = new ValidateToken();
+      validateToken.setValidateTokenInterface(this);
+      validateToken.validateExpireToken(this,0);
+      Log.e("oneSignal",this.userID);
 
   }
 
@@ -176,6 +199,7 @@ public class MainActivity extends AppCompatActivity implements MapInterface,
             this.stateDetails = false;
             profileFragment.loadInfoPerson();
             profileFragment.disable_fields();
+            profileFragment.setIdUser(this.userID);
         }
     }
 
@@ -240,5 +264,41 @@ public class MainActivity extends AppCompatActivity implements MapInterface,
         }
 
         return super.onKeyDown(keyCode,event);
+    }
+
+    @Override
+    public void errorWithDataUser() {
+
+    }
+
+    @Override
+    public void successValidateToken(int cod, String username, String token) {
+        switch (cod){
+            case COD_LOAD_PERSON:
+                Observable<InfoPerson> infoPerson = RetrofitSingleton.getApi(this).getInfoPerson(URL_GET_INFO + username,"Bearer "+token);
+
+                infoPerson.subscribeOn(Schedulers.io())
+                    .doOnSubscribe(()-> {})
+                    .doOnCompleted(()-> {})
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this::setInfoPerson,
+                        throwable -> {}, () -> validateToken.validateExpireToken(this,1));
+                break;
+            case COD_SAVE_PERSON:
+                infoP.setId(this.userID);
+                Observable<InfoPerson> updateInfo = RetrofitSingleton.getApi(this).updateInfoPerson("Bearer "+token, infoP);
+
+                updateInfo.subscribeOn(Schedulers.io())
+                    .doOnSubscribe(()-> {})
+                    .doOnCompleted(()-> {})
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this::setInfoPerson,
+                        throwable -> Log.e("guardoOk",throwable.getMessage(),throwable), () -> Log.e("guardoOk","OK"));
+                break;
+        }
+    }
+
+    private void setInfoPerson(InfoPerson infoP){
+        this.infoP = infoP;
     }
 }
