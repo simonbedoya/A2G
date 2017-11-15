@@ -23,6 +23,7 @@ import com.monitoreosatelitalgps.a2g.Fragment.DetailFragment;
 import com.monitoreosatelitalgps.a2g.Fragment.MapFragment;
 import com.monitoreosatelitalgps.a2g.Fragment.Interface.MapInterface;
 import com.monitoreosatelitalgps.a2g.Fragment.ProfileFragment;
+import com.monitoreosatelitalgps.a2g.Models.InfoId;
 import com.monitoreosatelitalgps.a2g.Models.InfoPerson;
 import com.monitoreosatelitalgps.a2g.Models.VehiculoMap;
 import com.monitoreosatelitalgps.a2g.R;
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements MapInterface,
   private String userID;
   private ValidateToken validateToken;
     private InfoPerson infoP;
+    private String token;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -91,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements MapInterface,
       validateToken.setValidateTokenInterface(this);
       validateToken.validateExpireToken(this,0);
       Log.e("oneSignal",this.userID);
-
+      //saveIdUser();
   }
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -107,6 +109,26 @@ public class MainActivity extends AppCompatActivity implements MapInterface,
     this.toolbar.getMenu().getItem(1).setVisible(false);
 
     return true;
+  }
+
+
+  private void saveIdUser(){
+      InfoId infoId = new InfoId();
+      infoId.setUuidCellphone(this.userID);
+      infoId.setIdUser(this.infoP.getId());
+
+      Observable<String> setIdUser = RetrofitSingleton.getApi(this).setIdUser("Bearer " + this.token, infoId);
+
+      setIdUser.subscribeOn(Schedulers.io())
+          .doOnSubscribe(()->{})
+          .doOnCompleted(()->{})
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(this::responseSetId,
+              throwable -> Error.errControlSetId(throwable,TAG_MAP,this.getCurrentFocus()), () -> Log.i(TAG_MAP, "succes"));
+  }
+
+  private void responseSetId(String response){
+
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -273,6 +295,7 @@ public class MainActivity extends AppCompatActivity implements MapInterface,
 
     @Override
     public void successValidateToken(int cod, String username, String token) {
+        this.token = token;
         switch (cod){
             case COD_LOAD_PERSON:
                 Observable<InfoPerson> infoPerson = RetrofitSingleton.getApi(this).getInfoPerson(URL_GET_INFO + username,"Bearer "+token);
@@ -300,5 +323,6 @@ public class MainActivity extends AppCompatActivity implements MapInterface,
 
     private void setInfoPerson(InfoPerson infoP){
         this.infoP = infoP;
+        //saveIdUser();
     }
 }

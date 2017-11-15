@@ -3,8 +3,6 @@ package com.monitoreosatelitalgps.a2g.Fragment;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -36,7 +34,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.monitoreosatelitalgps.a2g.Api.RetrofitSingleton;
 import com.monitoreosatelitalgps.a2g.Fragment.Interface.ErrorInterface;
 import com.monitoreosatelitalgps.a2g.Fragment.Interface.MapInterface;
-import com.monitoreosatelitalgps.a2g.Models.InfoPerson;
 import com.monitoreosatelitalgps.a2g.Models.Query;
 import com.monitoreosatelitalgps.a2g.Models.VehiculoMap;
 import com.monitoreosatelitalgps.a2g.R;
@@ -44,7 +41,6 @@ import com.monitoreosatelitalgps.a2g.Utils.CustomInfoWindow;
 import com.monitoreosatelitalgps.a2g.Utils.Error;
 import com.monitoreosatelitalgps.a2g.Utils.Interface.ValidateTokenInterface;
 import com.monitoreosatelitalgps.a2g.Utils.PermissionUtils;
-import com.monitoreosatelitalgps.a2g.Utils.Token;
 import com.monitoreosatelitalgps.a2g.Utils.ValidateToken;
 
 import java.util.ArrayList;
@@ -135,6 +131,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     public void onMapReady(GoogleMap mMap) {
         googleMap = mMap;
         GoogleMapOptions options = new GoogleMapOptions();
+
         options.compassEnabled(true).tiltGesturesEnabled(true).ambientEnabled(true);
         googleMap.getUiSettings().setCompassEnabled(true);
 

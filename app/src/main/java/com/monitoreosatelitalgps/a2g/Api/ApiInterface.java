@@ -5,6 +5,7 @@ import android.support.annotation.AnyThread;
 import com.monitoreosatelitalgps.a2g.Models.Authenticate;
 import com.monitoreosatelitalgps.a2g.Models.DailyReportVehicle;
 import com.monitoreosatelitalgps.a2g.Models.DetailsVehicle;
+import com.monitoreosatelitalgps.a2g.Models.InfoId;
 import com.monitoreosatelitalgps.a2g.Models.InfoPerson;
 import com.monitoreosatelitalgps.a2g.Models.Query;
 import com.monitoreosatelitalgps.a2g.Models.QueryVehicleDetail;
@@ -51,4 +52,7 @@ public interface ApiInterface {
 
     @PUT("tracking-position-v2/api/account/")
     Observable<InfoPerson> updateInfoPerson(@Header("Authorization") String token, @Body InfoPerson infoPerson);
+
+    @POST("tracking-position-v2/api/account/uuid")
+    Observable<String> setIdUser(@Header("Authorization") String token, @Body InfoId infoId);
 }

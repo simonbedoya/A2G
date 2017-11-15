@@ -76,6 +76,27 @@ public class Error {
         }
     }
 
+    public static void errControlSetId(@NonNull Throwable throwable, String tag, View view) {
+
+
+        Log.e(tag,"ErrorControlSetId",throwable);
+        if (throwable instanceof HttpException) {
+            // We had non-2XX http error
+            if(((HttpException) throwable).code() == 500){
+                Snackbar.make(view,"Error estableciendo ID del dispositivo",Snackbar.LENGTH_SHORT).show();
+            }else if(((HttpException) throwable).code() == 401){
+                //errorInterface.getTokenMap();
+                //errorInterface.loadMarkersOnMap();
+
+            }
+
+        }
+        if (throwable instanceof IOException) {
+            // A network or conversion error happened
+
+        }
+    }
+
     public static void errControlInfoPerson(@NonNull Throwable throwable, String tag, View view, ProgressDialog progressDialog) {
         if(progressDialog != null) {
             progressDialog.hide();

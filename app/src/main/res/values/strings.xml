@@ -22,4 +22,5 @@
     <string name="custom_tab_label">"%1$s (custom tab)"</string>
     <string name="browser_icon_contentDescription">Browser app icon</string>
     <string name="title_activity_root">RootActivity</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyB5MCydgBg-z2vbU6I6EhKdkyLNuuKK1Es</string>
 </resources>
